@@ -2,136 +2,127 @@
 
 Стефан Здравковски
 
-231246
+Индекс: 231246
 
 ## Control Flow Graph
 
 ### searchBookByTitle
 
-Фотографија од control flow graph-от за `searchBookByTitle`:
+Control Flow Graph за функцијата `searchBookByTitle`:
 
 ![CFG searchBookByTitle](docs/CFG_searchBookByTitle.drawio.png)
 
 ### borrowBook
 
-Фотографија од control flow graph-от за `borrowBook`:
+Control Flow Graph за функцијата `borrowBook`:
 
 ![CFG borrowBook](docs/borrowBook.drawio.png)
 
 ## Цикломатска комплексност
 
-Цикломатската комплексност ја пресметувам со формулата:
+Цикломатската комплексност ја пресметав со формулата:
 
 `V(G) = P + 1`
 
-каде што `P` е бројот на предикатни јазли.
+каде што `P` е бројот на предикатни јазли во функцијата.
 
 ### searchBookByTitle
 
-Цикломатската комплексност за `searchBookByTitle` е 5.
+За функцијата `searchBookByTitle` цикломатската комплексност е 5.
 
-Предикатни јазли:
+Предикатни јазли се:
 
-1. `if (title.isEmpty())`
-2. `for (Book book : books)`
-3. `if (book.getTitle().equalsIgnoreCase(title) && !book.isBorrowed())`
-4. `if (results.isEmpty())`
+1. проверката дали `title` е празен
+2. `for` циклусот низ листата со книги
+3. проверката дали насловот се совпаѓа и книгата не е изнајмена
+4. проверката дали листата `results` е празна
 
-Според формулата:
+Затоа:
 
-`V(G) = P + 1 = 4 + 1 = 5`
+`V(G) = 4 + 1 = 5`
 
 ### borrowBook
 
-Цикломатската комплексност за `borrowBook` е 5.
+За функцијата `borrowBook` цикломатската комплексност е 5.
 
-Предикатни јазли:
+Предикатни јазли се:
 
-1. `if (title.isEmpty() || author.isEmpty())`
-2. `for (Book book : books)`
-3. `if (book.getTitle().equalsIgnoreCase(title) && book.getAuthor().equalsIgnoreCase(author))`
-4. `if (!book.isBorrowed())`
+1. проверката дали `title` или `author` се празни
+2. `for` циклусот низ листата со книги
+3. проверката дали се совпаѓаат насловот и авторот
+4. проверката дали книгата не е веќе изнајмена
 
-Според формулата:
+Затоа:
 
-`V(G) = P + 1 = 4 + 1 = 5`
+`V(G) = 4 + 1 = 5`
 
 ## Gradle build
 
-Креиран е Gradle проект за обична Java апликација со име `SI_2026_lab2_231246`.
+Проектот е направен како Gradle Java проект со име `SI_2026_lab2_231246`.
 
-Главната класа е поставена во:
+Главната класа се наоѓа во:
 
 `src/main/java/org/example/SI2026Lab2Main.java`
 
-Тест класата е поставена во:
+Тест класата се наоѓа во:
 
 `src/test/java/org/example/SI2026Lab2Test.java`
 
-Проектот успешно се билдa и тестира со:
+Тестовите се извршуваат со командата:
 
 `./gradlew test`
 
-Резултат:
+При извршување на тестовите добив:
 
 `BUILD SUCCESSFUL`
 
-## Тест случаи според критериумот Every statement
+## Тест случаи според Every statement критериумот
 
 Функција: `searchBookByTitle`
 
 Тест функција: `searchBookEveryStatementTest`
 
-| Линија / наредба | test 1: пронајдена книга | test 2: книгата не постои | test 3: празен наслов |
+| Наредба | test 1: постои книга | test 2: не постои книга | test 3: празен наслов |
 |---|---|---|---|
-| `if (title.isEmpty())` | * | * | * |
-| `throw new IllegalArgumentException("Invalid title")` |  |  | * |
-| `List<Book> results = new ArrayList<>()` | * | * |  |
-| `for (Book book : books)` | * | * |  |
-| `if (book.getTitle().equalsIgnoreCase(title) && !book.isBorrowed())` | * | * |  |
-| `results.add(book)` | * |  |  |
-| `if (results.isEmpty())` | * | * |  |
-| `return null` |  | * |  |
-| `return results` | * |  |  |
+| проверка дали `title` е празен | * | * | * |
+| фрлање `IllegalArgumentException` |  |  | * |
+| креирање празна листа `results` | * | * |  |
+| поминување низ книгите со `for` | * | * |  |
+| проверка дали насловот се совпаѓа и книгата не е изнајмена | * | * |  |
+| додавање книга во `results` | * |  |  |
+| проверка дали `results` е празна | * | * |  |
+| враќање `null` |  | * |  |
+| враќање на листата `results` | * |  |  |
 
 Минимален број на тест случаи за оваа функција според Every statement критериумот е 3.
 
-Објаснување:
+Со првиот тест се покрива случај кога книгата е пронајдена. Со вториот тест се покрива случај кога нема резултати и функцијата враќа `null`. Со третиот тест се покрива случај кога насловот е празен и се фрла исклучок.
 
-- test 1 проверува случај кога постои книга и се враќа листа со резултати.
-- test 2 проверува случај кога не постои книга и се враќа `null`.
-- test 3 проверува случај кога насловот е празен и се фрла `IllegalArgumentException`.
-
-## Тест случаи според критериумот Every branch
+## Тест случаи според Every branch критериумот
 
 Функција: `borrowBook`
 
 Тест функција: `borrowBookEveryBranchTest`
 
-| Гранка | test 1: успешно изнајмување | test 2: веќе изнајмена книга | test 3: книга не е пронајдена | test 4: невалиден влез |
+| Гранка | test 1: успешно | test 2: веќе изнајмена | test 3: не е пронајдена | test 4: невалиден влез |
 |---|---|---|---|---|
-| `title.isEmpty() || author.isEmpty()` -> true |  |  |  | * |
-| `title.isEmpty() || author.isEmpty()` -> false | * | * | * |  |
-| насловот и авторот се совпаѓаат -> true | * | * |  |  |
-| насловот и авторот се совпаѓаат -> false |  |  | * |  |
-| `!book.isBorrowed()` -> true | * |  |  |  |
-| `!book.isBorrowed()` -> false |  | * |  |  |
-| `throw new RuntimeException("Book not found")` |  |  | * |  |
+| `title.isEmpty() || author.isEmpty()` е true |  |  |  | * |
+| `title.isEmpty() || author.isEmpty()` е false | * | * | * |  |
+| насловот и авторот се совпаѓаат | * | * |  |  |
+| насловот и авторот не се совпаѓаат |  |  | * |  |
+| `!book.isBorrowed()` е true | * |  |  |  |
+| `!book.isBorrowed()` е false |  | * |  |  |
+| книгата не е најдена и се фрла `RuntimeException` |  |  | * |  |
 
 Минимален број на тест случаи за оваа функција според Every branch критериумот е 4.
 
-Објаснување:
+Овие тестови ги покриваат главните гранки во функцијата: невалиден влез, успешно изнајмување, книга која веќе е изнајмена и книга која не е пронајдена.
 
-- test 1 покрива успешно изнајмување на книга.
-- test 2 покрива обид за изнајмување книга која веќе е изнајмена.
-- test 3 покрива случај кога книгата не е пронајдена.
-- test 4 покрива случај со невалиден влез.
-
-## Тест случаи според критериумот Multiple condition
+## Тест случаи според Multiple condition критериумот
 
 ### searchBookByTitle
 
-Услов:
+Условот што се тестира е:
 
 ```java
 book.getTitle().equalsIgnoreCase(title) && !book.isBorrowed()
@@ -139,23 +130,23 @@ book.getTitle().equalsIgnoreCase(title) && !book.isBorrowed()
 
 Подуслови:
 
-- A = `book.getTitle().equalsIgnoreCase(title)`
-- B = `!book.isBorrowed()`
+- A = насловот на книгата се совпаѓа со бараниот наслов
+- B = книгата не е изнајмена
 
 Тест функција: `searchBookMultipleConditionTest`
 
-| Комбинација | A | B | A && B | Тест случај |
+| Комбинација | A | B | Резултат | Тест случај |
 |---|---|---|---|---|
-| TT | true | true | true | книга со ист наслов и не е изнајмена |
-| TF | true | false | false | книга со ист наслов, но е изнајмена |
-| FT | false | true | false | книга со различен наслов и не е изнајмена |
-| FF | false | false | false | книга со различен наслов и е изнајмена |
+| TT | true | true | true | ист наслов и достапна книга |
+| TF | true | false | false | ист наслов, но изнајмена книга |
+| FT | false | true | false | различен наслов и достапна книга |
+| FF | false | false | false | различен наслов и изнајмена книга |
 
-Минимален број на тест случаи за оваа функција според Multiple condition критериумот е 4.
+Минимален број на тест случаи за овој услов според Multiple condition критериумот е 4.
 
 ### borrowBook
 
-Услов:
+Условот што се тестира е:
 
 ```java
 title.isEmpty() || author.isEmpty()
@@ -163,18 +154,18 @@ title.isEmpty() || author.isEmpty()
 
 Подуслови:
 
-- A = `title.isEmpty()`
-- B = `author.isEmpty()`
+- A = `title` е празен
+- B = `author` е празен
 
 Тест функција: `borrowBookMultipleConditionTest`
 
-| Комбинација | A | B | A || B | Тест случај |
+| Комбинација | A | B | Резултат | Тест случај |
 |---|---|---|---|---|
 | TT | true | true | true | празен наслов и празен автор |
-| TF | true | false | true | празен наслов и непразен автор |
-| FT | false | true | true | непразен наслов и празен автор |
-| FF | false | false | false | непразен наслов и непразен автор |
+| TF | true | false | true | празен наслов и внесен автор |
+| FT | false | true | true | внесен наслов и празен автор |
+| FF | false | false | false | внесен наслов и внесен автор |
 
-Минимален број на тест случаи за оваа функција според Multiple condition критериумот е 4.
+Минимален број на тест случаи за овој услов според Multiple condition критериумот е 4.
 
 Бидејќи се тестираат два услови со по два подуслови, вкупно се покриени 8 комбинации.
